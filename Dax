@@ -1,0 +1,55 @@
+Total Customers = DISTINCTCOUNT(dim_customer[customer_id])
+
+Gender Percenatge =   DIVIDE(DISTINCTCOUNT(dim_customer[customer_id]),CALCULATE(DISTINCTCOUNT(dim_customer[customer_id]),ALL(dim_customer[gender])))
+
+Active Customers = DISTINCTCOUNT(fact_transactions[customer_id])
+
+ActiveCustomerper = DIVIDE([Active Customers],[Total Customers])
+
+InactiveCustomers = [Total Customers] - [Active Customers]
+
+InactiveCustomer% = DIVIDE([InactiveCustomers],[Total Customers])
+
+Total Cards = DISTINCTCOUNT(dim_card[card_id])
+
+Transaction Count = DISTINCTCOUNT(fact_transactions[transaction_id])
+
+Average Transaction Value = DIVIDE([Total Transaction Amount],[Transaction Count])
+
+Avg AnualIncome = AVERAGE(dim_customer[yearly_income])
+
+Avg Customer Debt = AVERAGE(dim_customer[total_debt])
+
+Avg Transaction Value = divide([Total Transaction Amount],[Transaction Count])
+
+Age group Distribution = SWITCH(TRUE(),dim_customer[current_age] < 30,"18-29",
+dim_customer[current_age] < 40,"30-39",
+dim_customer[current_age]  < 50,"40-49",
+dim_customer[current_age] < 60,"50-59","60+")
+
+Average Debt = AVERAGE(dim_customer[total_debt])
+
+Online Transaction Rate = DIVIDE(CALCULATE([Transaction Count],fact_transactions[payment_method] = "Online Transaction"),CALCULATE([Transaction Count],all(fact_transactions[payment_method])))
+
+High Credit-Risk Customers = CALCULATE(DISTINCTCOUNT(dim_customer[customer_id]),dim_customer[credit_score] < 500)
+
+Credit Score Sort =
+SWITCH(TRUE(),
+    dim_customer[credit_score] < 580, 1,
+    dim_customer[credit_score] < 670, 2,
+    dim_customer[credit_score] < 740, 3,
+    dim_customer[credit_score] < 800, 4,
+    5)
+
+
+Income Group = SWITCH(TRUE(),dim_customer[yearly_income] < 30000,"Below 30K",
+dim_customer[yearly_income] < 50000,"30K-49K",
+dim_customer[yearly_income] < 75000,"50K-74K",
+dim_customer[yearly_income] < 100000,"75K-99K",
+"100K+")
+
+
+Average Debt-to-Income Ratio = AVERAGEX(FILTER(dim_customer,dim_customer[yearly_income] > 0),DIVIDE(dim_customer[total_debt],dim_customer[yearly_income]))
+
+
+
